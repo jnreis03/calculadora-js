@@ -6,6 +6,7 @@ class CalcController {
     this._timeEl = document.querySelector("#hora");
     this._currentDate;
     this.initialize();
+    this.initButtonEvents();
   }
 
   initialize() {
@@ -17,10 +18,18 @@ class CalcController {
   }
 
   // nó, mil treta configurar git
-  
+
   initButtonEvents(){
 
+
     let buttons = document.querySelectorAll("#buttons > g, #parts > g");
+
+    buttons.forEach(btn=>{
+
+        btn.addEventListener('click', e=>{
+            console.log(btn.className.baseVal.replace("btn-",""));
+        });
+    });
 
   }
 
