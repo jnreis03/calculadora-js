@@ -16,6 +16,8 @@ class CalcController {
     }, 1000);
   }
 
+  // nó, mil treta configurar git
+  
   initButtonEvents(){
 
     let buttons = document.querySelectorAll("#buttons > g, #parts > g");
