@@ -19,18 +19,20 @@ class CalcController {
 
   // nó, mil treta configurar git
 
-  initButtonEvents(){
+  addEventListenerAll(element, events, fn) {
+    events.split(" ").forEach(event => {
+      element.addEventListener(event, fn);
+    });
+  }
 
-
+  initButtonEvents() {
     let buttons = document.querySelectorAll("#buttons > g, #parts > g");
 
-    buttons.forEach(btn=>{
-
-        btn.addEventListener('click', e=>{
-            console.log(btn.className.baseVal.replace("btn-",""));
-        });
+    buttons.forEach((btn) => {
+      this.addEventListenerAll(btn, "click drag mouseover", (e) => {
+        console.log(btn.className.baseVal.replace("btn-", ""));
+      });
     });
-
   }
 
   setDisplayDateTime() {
