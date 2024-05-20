@@ -41,15 +41,15 @@ class CalcController {
   }
   
   isOperator(value) {
-    return ["+", "-", "*", "%", "/"].indexOf(value) > -1;
+    return (["+", "-", "*", "%", "/"].indexOf(value) > -1);
   }
 
   addOperation(value) {
     console.log("Last Digit isNaN? ", isNaN(this.getLastOperation()));
 
-    if (isNaN(this.getLastOperation(value))) {
+    if (isNaN(this.getLastOperation(value))) { // 789
       // string
-      if (this.isOperator(value)) {
+      if (this.isOperator(value) && this._operation.length > 0) {
 
         // trocar o operador
         this.setLastOperation(value);
@@ -58,6 +58,7 @@ class CalcController {
 
         //outra coisa
         console.log(value);
+        this.setError();
 
       } else {
 
@@ -67,9 +68,14 @@ class CalcController {
     } else {
 
       // cat two numbers
-      let newValue = this.getLastOperation().toString() + value.toString();
-      this.setLastOperation(parseInt(newValue));
-
+      if(isNaN(value))
+        this._operation.push(value);
+      else{
+        console.log("caiu no ultimo else...");
+        let newValue = this.getLastOperation().toString() + value.toString();
+        this.setLastOperation(parseInt(newValue));
+  
+      }
     }
 
     console.log(this._operation);
@@ -77,6 +83,10 @@ class CalcController {
 
   setError() {
     this.displayCalc = "Error";
+  }
+
+  solveEquation(equation){
+      return eval(equation.toString().replaceAll(',',''));
   }
 
   execBtn(value) {
@@ -110,6 +120,8 @@ class CalcController {
         break;
 
       case "igual":
+        this.displayCalc = this.solveEquation(this._operation);
+        console.log(this.solveEquation(this._operation));
         break;
 
       case "ponto":
