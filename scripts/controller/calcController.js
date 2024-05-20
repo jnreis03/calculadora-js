@@ -26,10 +26,12 @@ class CalcController {
 
   clearAll() {
     this._operation = [];
+    //console.log(this._operation);
   }
 
   clearEntry() {
     this._operation.pop();
+    //console.log(this._operation);
   }
 
   getLastOperation() {
