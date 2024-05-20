@@ -46,12 +46,38 @@ class CalcController {
     return (["+", "-", "*", "%", "/"].indexOf(value) > -1);
   }
 
-  addOperation(value) {
-    console.log("Last Digit isNaN? ", isNaN(this.getLastOperation()));
+  pushOperation(value){
+    this._operation.push(value);
+    if(this._operation.length > 3){
+      this.calc();
+    }
+  }
 
-    if (isNaN(this.getLastOperation(value))) { // 789
+  calc(){
+    let lastOp = this._operation.pop();
+    let result = eval(this._operation.join(""));
+    this._operation = [result, lastOp];
+    this.setLastNumberToDisplay();
+  }
+
+  setLastNumberToDisplay(){
+    let lastNumber;
+    for(let i = this._operation.length-1; i >= 0; i--){
+      if(!this.isOperator(this._operation[i])){
+        lastNumber = this._operation[i];
+        break;
+      }
+
+    }
+    this.displayCalc = lastNumber;
+  }
+
+  addOperation(value) {
+
+    //console.log("Last Digit isNaN? ", isNaN(this.getLastOperation()));
+    if (isNaN(this.getLastOperation(value))) {
       // string
-      if (this.isOperator(value) && this._operation.length > 0) {
+      if (this.isOperator(value)) {
 
         // trocar o operador
         this.setLastOperation(value);
@@ -59,27 +85,32 @@ class CalcController {
       } else if (isNaN(value)) {
 
         //outra coisa
-        console.log(value);
+        //console.log(value);
         this.setError();
 
       } else {
 
-        this._operation.push(value);
+        this.pushOperation(value);
+        this.setLastNumberToDisplay();
+        
+
       }
 
     } else {
 
       // cat two numbers
       if(isNaN(value))
-        this._operation.push(value);
+        this.pushOperation(value);
       else{
-        console.log("caiu no ultimo else...");
+        //console.log("caiu no ultimo else...");
         let newValue = this.getLastOperation().toString() + value.toString();
         this.setLastOperation(parseInt(newValue));
+
+        // atualizar display
+        this.setLastNumberToDisplay();
   
       }
     }
-
     console.log(this._operation);
   }
 
@@ -87,9 +118,7 @@ class CalcController {
     this.displayCalc = "Error";
   }
 
-  solveEquation(equation){
-      return eval(equation.toString().replaceAll(',',''));
-  }
+
 
   execBtn(value) {
     switch (value) {
@@ -122,8 +151,8 @@ class CalcController {
         break;
 
       case "igual":
-        this.displayCalc = this.solveEquation(this._operation);
-        console.log(this.solveEquation(this._operation));
+        //this.displayCalc = this.calc();
+        //console.log(this.calc());
         break;
 
       case "ponto":
@@ -154,7 +183,7 @@ class CalcController {
     buttons.forEach((btn) => {
       this.addEventListenerAll(btn, "click drag", (e) => {
         let text = btn.className.baseVal.replace("btn-", "");
-        console.log(btn.className.baseVal.replace("btn-", ""));
+        //console.log(btn.className.baseVal.replace("btn-", ""));
 
         this.execBtn(text);
       });
