@@ -11,6 +11,7 @@ class CalcController {
     this._currentDate;
     this.initialize();
     this.initButtonEvents();
+    this.initKeyboard();
   }
 
   initialize() {
@@ -23,6 +24,56 @@ class CalcController {
 
     this.setLastNumberToDisplay();
   }
+
+  initKeyboard(){
+
+    document.addEventListener('keyup', e=>{
+      switch (e.key) {
+        case 'Escape':
+          this.clearAll();
+          break;
+  
+        case 'Backspace':
+          this.clearEntry();
+          break;
+  
+        case '%':
+        case '/':
+        case '*':
+        case '-':
+        case '+':
+          this.addOperation(e.key);
+          break;
+  
+        case 'Enter':
+        case '=':
+          this.calc();
+          break;
+  
+        case '.':
+        case ',':
+          this.addDot('.');
+          break;
+  
+        case '0':
+        case '1':
+        case '2':
+        case '3':
+        case '4':
+        case '5':
+        case '6':
+        case '7':
+        case '8':
+        case '9':
+          this.addOperation(parseInt(e.key));
+          break;
+
+      }
+      console.log(e.key);
+    });
+    
+  }
+
 
   addEventListenerAll(element, events, fn) {
     events.split(" ").forEach((event) => {
@@ -201,52 +252,52 @@ class CalcController {
 
   execBtn(value) {
     switch (value) {
-      case "ac":
+      case 'ac':
         this.clearAll();
         break;
 
-      case "ce":
+      case 'ce':
         this.clearEntry();
         break;
 
-      case "porcento":
-        this.addOperation("%");
+      case 'porcento':
+        this.addOperation('%');
         break;
 
-      case "divisao":
-        this.addOperation("/");
+      case 'divisao':
+        this.addOperation('/');
         break;
 
-      case "multiplicacao":
-        this.addOperation("*");
+      case 'multiplicacao':
+        this.addOperation('*');
         break;
 
-      case "subtracao":
-        this.addOperation("-");
+      case 'subtracao':
+        this.addOperation('-');
         break;
 
-      case "soma":
-        this.addOperation("+");
+      case 'soma':
+        this.addOperation('+');
         break;
 
-      case "igual":
+      case 'igual':
         this.calc();
         break;
 
-      case "ponto":
-        this.addDot(".");
+      case 'ponto':
+        this.addDot('.');
         break;
 
-      case "0":
-      case "1":
-      case "2":
-      case "3":
-      case "4":
-      case "5":
-      case "6":
-      case "7":
-      case "8":
-      case "9":
+      case '0':
+      case '1':
+      case '2':
+      case '3':
+      case '4':
+      case '5':
+      case '6':
+      case '7':
+      case '8':
+      case '9':
         this.addOperation(parseInt(value));
         break;
       default:
@@ -259,7 +310,7 @@ class CalcController {
     let buttons = document.querySelectorAll("#buttons > g, #parts > g");
 
     buttons.forEach((btn) => {
-      this.addEventListenerAll(btn, "click drag", (e) => {
+      this.addEventListenerAll(btn, "click drag", e => {
         let text = btn.className.baseVal.replace("btn-", "");
         //console.log(btn.className.baseVal.replace("btn-", ""));
 
