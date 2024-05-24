@@ -107,7 +107,7 @@ class CalcController {
       }
 
     }
-
+    console.log(this._operation);
     this.setLastNumberToDisplay();
 
   }
@@ -169,7 +169,7 @@ class CalcController {
       else{
         //console.log("caiu no ultimo else...");
         let newValue = this.getLastOperation().toString() + value.toString();
-        this.setLastOperation(parseFloat(newValue)); // parseFloat keeps decimal part of ints, wich parseInt doesnt
+        this.setLastOperation(newValue); 
 
         // atualizar display
         this.setLastNumberToDisplay();
@@ -185,6 +185,8 @@ class CalcController {
 
   addDot() {
     let lastOperation = this.getLastOperation();
+
+    if(typeof lastOperation === 'string' && lastOperation.split('').indexOf('.') > -1) return;
 
     if(this.isOperator(lastOperation) || !lastOperation){ // quando o primeiro clique é no botao ponto
       this.pushOperation('0.');
