@@ -32,6 +32,8 @@ class CalcController {
 
   clearAll() {
     this._operation = [];
+    this._lastNumber = '';
+    this._lastOperator = '';
     this.setLastNumberToDisplay();
     //console.log(this._operation);
   }
@@ -151,12 +153,6 @@ class CalcController {
         // trocar o operador
         this.setLastOperation(value);
 
-      } else if (isNaN(value)) {
-
-        //outra coisa
-        //console.log(value);
-        this.setError();
-
       } else {
 
         this.pushOperation(value);
@@ -173,7 +169,7 @@ class CalcController {
       else{
         //console.log("caiu no ultimo else...");
         let newValue = this.getLastOperation().toString() + value.toString();
-        this.setLastOperation(parseInt(newValue));
+        this.setLastOperation(parseFloat(newValue)); // parseFloat keeps decimal part of ints, wich parseInt doesnt
 
         // atualizar display
         this.setLastNumberToDisplay();
@@ -187,6 +183,18 @@ class CalcController {
     this.displayCalc = "Error";
   }
 
+  addDot() {
+    let lastOperation = this.getLastOperation();
+
+    if(this.isOperator(lastOperation) || !lastOperation){ // quando o primeiro clique é no botao ponto
+      this.pushOperation('0.');
+    } else {
+      this.setLastOperation(lastOperation.toString() + '.');
+    }
+
+    console.log("lastOperatorion", lastOperation);
+    this.setLastNumberToDisplay();
+  }
 
 
   execBtn(value) {
@@ -224,7 +232,7 @@ class CalcController {
         break;
 
       case "ponto":
-        this.addOperation(".");
+        this.addDot(".");
         break;
 
       case "0":
