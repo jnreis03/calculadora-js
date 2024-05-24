@@ -11,11 +11,14 @@ class CalcController {
   }
 
   initialize() {
+
     this.setDisplayDateTime();
 
     setInterval(() => {
       this.setDisplayDateTime();
     }, 1000);
+
+    this.setLastNumberToDisplay();
   }
 
   addEventListenerAll(element, events, fn) {
@@ -26,11 +29,13 @@ class CalcController {
 
   clearAll() {
     this._operation = [];
+    this.setLastNumberToDisplay();
     //console.log(this._operation);
   }
 
   clearEntry() {
     this._operation.pop();
+    this.setLastNumberToDisplay();
     //console.log(this._operation);
   }
 
@@ -55,7 +60,12 @@ class CalcController {
 
   calc(){
 
-    let lastOp = this._operation.pop();
+    let lastOp = '';
+    if(this._operation.length > 3){ // o pop só pode ocorrer com 4 ou mais itens para
+                                    // não ocorrer de faltar termo pro eval: 30 + ''
+      let lastOp = this._operation.pop();
+    }
+
     let result = eval(this._operation.join(""));
 
     if(lastOp === '%'){
@@ -65,10 +75,13 @@ class CalcController {
 
     } else {
 
-      this._operation = [result, lastOp];
+      this._operation = [result];
+      if(lastOp){ // confere se o ultimo termo da expressao é significativo, se for, volta pra operation
+        this._operation.push(lastOp);
+      }
 
     }
-    
+
     this.setLastNumberToDisplay();
 
   }
@@ -81,6 +94,9 @@ class CalcController {
         break;
       }
 
+    }
+    if(!lastNumber){
+      lastNumber = 0;
     }
     this.displayCalc = lastNumber;
   }
