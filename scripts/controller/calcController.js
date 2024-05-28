@@ -14,6 +14,21 @@ class CalcController {
     this.initKeyboard();
   }
 
+  /**
+   * literalmente a implementação do CTRL C CTRL V
+   * gambiarra que cria um input e joga dentro dele o que está no display da calculadora, 
+   * depois copia esse valor de dentro do input.
+   */
+  copyToClipboard(){
+
+    let input = document.createElement('input');
+    input.value = this.displayCalc;
+
+    document.body.appendChild(input);
+    input.select();
+    document.execCommand("Copy");
+  }
+
   initialize() {
 
     this.setDisplayDateTime();
@@ -66,6 +81,10 @@ class CalcController {
         case '8':
         case '9':
           this.addOperation(parseInt(e.key));
+          break;
+        
+        case 'c':
+          if(e.ctrlKey) this.copyToClipboard();
           break;
 
       }
