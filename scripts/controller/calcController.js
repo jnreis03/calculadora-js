@@ -1,5 +1,7 @@
 class CalcController {
   constructor() {
+    this._audio = new Audio('click.mp3');
+    this._audioOnOff = false;
     this._lastOperator = '';
     this._lastNumber = '';
 
@@ -44,7 +46,9 @@ class CalcController {
     });
 
   }
-
+/**
+ * inicia todos os métodos primarios para o funcionamento da calculadora
+ */
   initialize() {
 
     this.setDisplayDateTime();
@@ -55,11 +59,40 @@ class CalcController {
 
     this.setLastNumberToDisplay();
     this.pasteFromClipboard();
+
+    document.querySelectorAll('.btn-ac').forEach(btn=>{
+      btn.addEventListener('dblclick', e=>{
+        this.toggleAudio();
+
+      });
+    });
   }
 
+  /**
+   * interruptor do som das teclas da calculadora
+   * duplo clique no AC para ativar/desativar
+   */
+  toggleAudio(){
+    this._audioOnOff = !this._audioOnOff;
+
+  }
+  playAudio(){
+    if(this._audioOnOff){
+      this._audio.currentTime = 0; // overlap de som de click
+      this._audio.play();
+    }
+  }
+
+/**
+ * adiciona eventListener nas teclas do teclado para inserir os numeros
+ * na calculadora quando usado o teclado fisico
+ */
   initKeyboard(){
 
     document.addEventListener('keyup', e=>{
+
+      this.playAudio(); // chamada do audio para eventos no teclado fisico
+
       switch (e.key) {
         case 'Escape':
           this.clearAll();
@@ -117,6 +150,7 @@ class CalcController {
     });
   }
 
+  // tecla AC
   clearAll() {
     this._operation = [];
     this._lastNumber = '';
@@ -125,24 +159,40 @@ class CalcController {
     //console.log(this._operation);
   }
 
+  // tecla CE
   clearEntry() {
     this._operation.pop();
     this.setLastNumberToDisplay();
     //console.log(this._operation);
   }
 
+  // pega o ultimo item do array de calculo trabalhado, qualquer que seja
   getLastOperation() {
     return this._operation[this._operation.length - 1];
   }
 
+  // substitui o ultimo item do array de calculo trabalhado
   setLastOperation(value) {
     this._operation[this._operation.length - 1] = value;
   }
   
+  /**
+   * 
+   * @param {String} value 
+   * @returns retorna o indice do operador, se não for operador, retorna -1,
+   * basicamente serve de Bool para checar se um input é operador
+   */
   isOperator(value) {
     return (["+", "-", "*", "%", "/"].indexOf(value) > -1);
   }
 
+  /**
+   * 
+   * @param {any} value 
+   * adiciona novos itens no array de calculo trabalhado, quando o array tem mais de 3
+   * itens, resolve os 3 primeiros pois subentende que já é possivel realizar um calculo
+   * com o inicio do array
+   */
   pushOperation(value){
     this._operation.push(value);
     if(this._operation.length > 3){
@@ -150,11 +200,18 @@ class CalcController {
     }
   }
 
+  /**
+   * 
+   * @returns resultado da operação pelo metodo eval
+   */
   getResult(){
 
     return eval(this._operation.join(""));
   }
 
+  /**
+   * logica da calculadora em si
+   */
   calc(){
 
     let lastOp = '';
@@ -287,6 +344,7 @@ class CalcController {
 
 
   execBtn(value) {
+    this.playAudio();
     switch (value) {
       case 'ac':
         this.clearAll();
@@ -347,10 +405,10 @@ class CalcController {
 
     buttons.forEach((btn) => {
       this.addEventListenerAll(btn, "click drag", e => {
-        let text = btn.className.baseVal.replace("btn-", "");
+        let textBtn = btn.className.baseVal.replace("btn-", "");
         //console.log(btn.className.baseVal.replace("btn-", ""));
 
-        this.execBtn(text);
+        this.execBtn(textBtn);
       });
 
       this.addEventListenerAll(btn, "mouseover mouseup mousedown", (e) => {
