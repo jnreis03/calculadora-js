@@ -24,9 +24,25 @@ class CalcController {
     let input = document.createElement('input');
     input.value = this.displayCalc;
 
-    document.body.appendChild(input);
+    document.body.appendChild(input); // insere o filho, no caso elemento input, no body do documento
     input.select();
     document.execCommand("Copy");
+    input.remove(); // remove após copia
+
+  }
+
+  /**
+   * inverso do método copyToClipboard, coloca no display da calculadora informação do clipboard.
+   */
+  pasteFromClipboard(){
+    document.addEventListener('paste', e=>{
+      let text = e.clipboardData.getData('Text');
+      this.displayCalc = parseFloat(text);
+
+      console.log(text);
+
+    });
+
   }
 
   initialize() {
@@ -38,6 +54,7 @@ class CalcController {
     }, 1000);
 
     this.setLastNumberToDisplay();
+    this.pasteFromClipboard();
   }
 
   initKeyboard(){
