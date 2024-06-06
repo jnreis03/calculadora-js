@@ -23,13 +23,9 @@ class CalcController {
    */
   copyToClipboard(){
 
-    let input = document.createElement('input');
-    input.value = this.displayCalc;
-
-    document.body.appendChild(input); // insere o filho, no caso elemento input, no body do documento
-    input.select();
-    document.execCommand("Copy");
-    input.remove(); // remove após copia
+    if(navigator.clipboard){
+      navigator.clipboard.writeText(this.displayCalc);
+    }
 
   }
 
