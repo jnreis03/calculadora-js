@@ -206,7 +206,17 @@ class CalcController {
    */
   getResult(){
 
-    return eval(this._operation.join(""));
+    try{
+
+      return eval(this._operation.join(""));
+
+    }catch(e){
+      setTimeout(()=>{
+        this.setError();
+      }, 1);
+
+    };
+
   }
 
   /**
@@ -430,6 +440,12 @@ class CalcController {
     return this._displayCalcEl.innerHTML;
   }
   set displayCalc(value) {
+
+    if(value.toString().length > 10){ // mais de 10 caracteres display de error
+      this.setError();
+      return false;
+    }
+
     this._displayCalcEl.innerHTML = value;
   }
 
